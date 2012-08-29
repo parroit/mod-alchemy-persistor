@@ -1,6 +1,6 @@
 # Alchemy Persistor
 
-This module allows data to be saved, retrieved, searched for, and deleted in a Sql Alchemy managed database.
+This module allows data to be saved, retrieved, searched for, and deleted in a [Sql Alchemy][1] managed database.
 
 
 
@@ -52,7 +52,7 @@ Let's take a look at each field in turn:
 ## Operations
 
 The module supports the operations above. Please note that the operations protocol
-is identical to that used by (mongo persistor module)[https://github.com/vert-x/mod-mongo-persistor].
+is identical to that used by [mongo persistor module][2].
 
 This allow you to configure the use of alchemy persistor in every place where
 you used Mongo persistor, without need to change your code.
@@ -312,4 +312,8 @@ If an error occurs in finding the documents a reply is returned:
         "message": <message>
     }
     
-Where `message` is an error message. 
+Where `message` is an error message.
+
+
+[1]: http://www.sqlalchemy.org/
+[2]: https://github.com/vert-x/mod-mongo-persistor
