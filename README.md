@@ -1,8 +1,8 @@
-# MongoDB Persistor
+# Alchemy Persistor
 
-This module allows data to be saved, retrieved, searched for, and deleted in a MongoDB instance. MongoDB is a great match for persisting vert.x data since it natively handles JSON (BSON) documents. To use this module you must have a MongoDB instance running on your network.
+This module allows data to be saved, retrieved, searched for, and deleted in a Sql Alchemy managed database.
 
-This is a worker module and must be started as a worker verticle.
+
 
 ## Dependencies
 
@@ -10,38 +10,52 @@ This module requires a MongoDB server to be available on the network.
 
 ## Name
 
-The module name is `mongo-persistor`.
+The module name is `alchemy-persistor`.
 
 ## Configuration
 
-The mongo-persistor module takes the following configuration:
+The alchemy-persistor module takes the following configuration:
 
     {
-        "address": <address>,
-        "host": <host>,
-        "port": <port>,
-        "db_name": <db_name>    
+        "address":"<address to listen to>",
+        "protocol":"<sql alchemy protocol>",
+        "host":"<database server hostname>",
+        "db_name":"<name of database>",
+        "username":"<username>",
+        "password":"<password>",
+        "model-path":"<path to the folder containing model definitions>"
     }
     
 For example:
 
     {
-        "address": "test.my_persistor",
-        "host": "192.168.1.100",
-        "port": 27000
-        "db_name": "my_db"
+        "address":"mysql.persistor",
+        "protocol":"mysql",
+        "host":"myserver.com",
+        "db_name":"mydb",
+        "username":"myname",
+        "password":"mypassword",
+        "model-path":"models"
     }        
     
 Let's take a look at each field in turn:
 
-* `address` The main address for the module. Every module has a main address. Defaults to `vertx.mongopersistor`.
+* `address` The main address for the module. Every module has a main address. Defaults to `alchemy-persistor`.
+* `protocol` Name of the sql alchemy protocol to use to connect to database. Defaults to `sqlite`.
 * `host` Host name or ip address of the MongoDB instance. Defaults to `localhost`.
-* `port` Port at which the MongoDB instance is listening. Defaults to `27017`.
-* `db_name` Name of the database in the MongoDB instance to use. Defaults to `default_db`.
+* `db_name` Name of the database to use.
+* `username` Username to use to connect to database.
+* `password` Password to use to connect to database.
+* `model-path` path to the folder containing model definitions. This folder should
+    containing python files with definition of your sql alchemy model classes.
 
 ## Operations
 
-The module supports the following operations
+The module supports the operations above. Please note that the operations protocol
+is identical to that used by (mongo persistor module)[https://github.com/vert-x/mod-mongo-persistor].
+
+This allow you to configure the use of alchemy persistor in every place where
+you used Mongo persistor, without need to change your code.
 
 ### Save
 
