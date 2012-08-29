@@ -57,11 +57,14 @@ is identical to that used by [mongo persistor module][2].
 This allow you to configure the use of alchemy persistor in every place where
 you used Mongo persistor, without need to change your code.
 
+In every operation, the `collection` param must refer to the name of
+the Sql Alchemy class you want to work with.
+
 ### Save
 
-Saves a document in the database.
+Saves a row in the database.
 
-To save a document send a JSON message to the module main address:
+To save a row send a JSON message to the module main address:
 
     {
         "action": "save",
@@ -70,7 +73,7 @@ To save a document send a JSON message to the module main address:
     }     
     
 Where:
-* `collection` is the name of the MongoDB collection that you wish to save the document in. This field is mandatory.
+* `collection` is the name of the Sql Alchemy table that you wish to save the document in. This field is mandatory.
 * `document` is the JSON document that you wish to save.
 
 An example would be:
@@ -90,18 +93,23 @@ An example would be:
 When the save complete successfully, a reply message is sent back to the sender with the following data:
 
     {
-        "status": "ok"
+        "status": "ok",
+        "document": {
+            "name": "tim",
+            "age": 1000,
+            "shoesize": 3.14159,
+            "username": "tim",
+            "password": "wibble"
+        }
     }
     
-The reply will also contain a field `_id` if the document that was saved didn't specifiy an id, this will be an automatically generated UUID, for example:
+The reply will also contain a field `document` with the row that was saved to database.
+This could be useful to retrieve the value of fields eventually setted by the Sql Alchemy class
+or by the database server.
 
-    {
-        "status": "ok"
-        "_id": "ffeef2a7-5658-4905-a37c-cfb19f70471d"
-    }
-     
-If you save a document which already possesses an `_id` field, and a document with the same id already exists in the database, then the document will be updated. 
- 
+If the row already exists in the database it will be updated, otherwise it will be inserted.
+
+
 If an error occurs in saving the document a reply is returned:
 
     {
@@ -127,10 +135,10 @@ To find documents send a JSON message to the module main address:
     }     
     
 Where:
-* `collection` is the name of the MongoDB collection that you wish to search in in. This field is mandatory.
-* `matcher` is a JSON object that you want to match against to find matching documents. This obeys the normal MongoDB matching rues.
-* `limit` is a number which determines the maximum total number of documents to return. This is optional. By default all documents are returned.
-* `batch_size` is a number which determines how many documents to return in each reply JSON message. It's optional and the default value is `100`. Batching is discussed in more detail below.
+* `collection` is the name of the Sql Alchemy table that you wish to search in in. This field is mandatory.
+* `matcher` is a JSON object that you want to match against to find matching documents. This obeys the normal mongo persistor matching rues.
+    Otherwise, it can be a string representing a query to issue on the db
+* `limit` is a number which determines the maximum total number of rows to return. This is optional. By default all rows are returned.
 
 An example would be:
 
@@ -141,8 +149,21 @@ An example would be:
             "item": "cheese"
         }
     }  
-    
-This would return all orders where the `item` field has the value `cheese`. 
+
+*This would return all orders where the `item` field has the value `cheese`*
+
+or using the query syntax for the matcher:
+
+    {
+        "action": "find",
+        "collection": "orders",
+        "matcher": "item == 'cheese' or total > 100"
+        }
+    }
+
+*This would return all orders where the `item` field has the value `cheese`, and the `qty` field is greater than 100*
+
+
 
 When the find complete successfully, a reply message is sent back to the sender with the following data:
 
@@ -183,42 +204,6 @@ If an error occurs in finding the documents a reply is returned:
     
 Where `message` is an error message. 
 
-#### Batching
-
-If a find returns many documents we do not want to load them all up into memory at once and send them in a single JSON message since this could result in the server running out of RAM.
-
-Instead, if there are more than `batch_size` documents to be found, the module will send a maxium of `batch_size` documents in each reply, and send multiple replies.
-
-When you receive a reply to the find message containing `batch_size` documents the `status` field of the reply will be set to `more-exist` if there are more documents available.
-
-To get the next batch of documents you just reply to the reply with an empty JSON message, and specify a reply handler in which to receive the next batch.
-
-For instance, in JavaScript you might do something like:
-
-    function processResults(results) {
-        // Process the data
-    }
-
-    function createReplyHandler() {
-        return function(reply, replier) {
-            // Got some results - process them
-            processResults(reply.results);
-            if (reply.status === 'more-exist') {
-                // Get next batch
-                replier({}, createReplyHandler());
-            }
-        }
-    }
-
-    // Send the find request
-    eb.send('foo.myPersistor', {
-        action: 'find',
-        collection: 'items',
-        matcher: {}        
-    }, createReplyHandler());
-    
-If there is more data to be requested and you do not reply to get the next batch within a timeout (10 seconds), then the underlying MongoDB cursor will be closed, and any further attempts to request more will fail.    
-    
 
 ### Find One
 
@@ -231,10 +216,11 @@ To find a document send a JSON message to the module main address:
         "collection": <collection>,
         "matcher": <matcher>
     }     
-    
+
 Where:
-* `collection` is the name of the MongoDB collection that you wish to search in in. This field is mandatory.
-* `matcher` is a JSON object that you want to match against to find a matching document. This obeys the normal MongoDB matching rues.
+* `collection` is the name of the Sql Alchemy table that you wish to search in in. This field is mandatory.
+* `matcher` is a JSON object that you want to match against to find matching documents. This obeys the normal mongo persistor matching rues.
+    Otherwise, it can be a string representing a query to issue on the db
 
 If more than one document matches, just the first one will be returned.
 
@@ -242,13 +228,26 @@ An example would be:
 
     {
         "action": "findone",
-        "collection": "items",
+        "collection": "orders",
         "matcher": {
-            "_id": "ffeef2a7-5658-4905-a37c-cfb19f70471d"
+            "item": "cheese"
         }
     }  
-    
-This would return the item with the specified id.
+
+
+*This would return the first order where the `item` field has the value `cheese`*
+
+or using the query syntax for the matcher:
+
+    {
+        "action": "findone",
+        "collection": "orders",
+        "matcher": "item == 'cheese' or total > 100"
+        }
+    }
+
+*This would return the first order where the `item` field has the value `cheese`, and the `qty` field is greater than 100*
+
 
 When the find complete successfully, a reply message is sent back to the sender with the following data:
 
@@ -268,7 +267,7 @@ Where `message` is an error message.
 
 ### Delete
 
-Deletes a matching documents in the database.
+Deletes matching documents in the database.
 
 To delete documents send a JSON message to the module main address:
 
@@ -277,10 +276,12 @@ To delete documents send a JSON message to the module main address:
         "collection": <collection>,
         "matcher": <matcher>
     }     
-    
+
+
 Where:
-* `collection` is the name of the MongoDB collection that you wish to delete from. This field is mandatory.
-* `matcher` is a JSON object that you want to match against to delete matching documents. This obeys the normal MongoDB matching rues.
+* `collection` is the name of the Sql Alchemy table that you wish to delete from. This field is mandatory.
+* `matcher` is a JSON object that you want to match against to find matching documents. This obeys the normal mongo persistor matching rues.
+    Otherwise, it can be a string representing a query to issue on the db
 
 All documents that match will be deleted.
 
@@ -290,11 +291,24 @@ An example would be:
         "action": "delete",
         "collection": "items",
         "matcher": {
-            "_id": "ffeef2a7-5658-4905-a37c-cfb19f70471d"
+            "item": "cheese"
         }
     }  
     
-This would delete the item with the specified id.
+
+*This would delete all orders where the `item` field has the value `cheese`*
+
+
+or using the query syntax for the matcher:
+
+    {
+        "action": "delete",
+        "collection": "orders",
+        "matcher": "item == 'cheese' or total > 100"
+        }
+    }
+
+*This would delete all orders where the `item` field has the value `cheese`, and the `qty` field is greater than 100*
 
 When the find complete successfully, a reply message is sent back to the sender with the following data:
 
