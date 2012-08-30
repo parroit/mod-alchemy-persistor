@@ -1,0 +1,109 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <name>alchemy-persistor</name>
+    <groupId>eban</groupId>
+    <artifactId>alchemy-persistor</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <distributionManagement>
+        <repository>
+
+            <id>local-deploy</id>
+            <url>file://local-repo</url>
+
+        </repository>
+
+    </distributionManagement>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.7</source>
+                        <target>1.7</target>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.vertx</groupId>
+                    <artifactId>vertx-maven-plugin</artifactId>
+                    <version>1.2.3.1-RELEASE</version>
+                    <configuration>
+                        <moduleName>eban.alchemy-persistor-v0.1</moduleName>
+                        <moduleRepoUrl>http://github.com/parroit/vertx-mods</moduleRepoUrl>
+                    </configuration>
+                </plugin>
+
+            </plugins>
+
+        </pluginManagement>
+
+
+        <testSourceDirectory>${project.basedir}/test/src</testSourceDirectory>
+    </build>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.python</groupId>
+            <artifactId>jython</artifactId>
+            <version>2.5.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.vert-x</groupId>
+            <artifactId>vertx-core</artifactId>
+            <version>1.2.3.final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.vert-x</groupId>
+            <artifactId>vertx-lang-java</artifactId>
+            <version>1.2.3.final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.vert-x</groupId>
+            <artifactId>vertx-lang-java</artifactId>
+            <version>1.2.3.final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.vert-x</groupId>
+            <artifactId>vertx-testframework</artifactId>
+            <version>1.2.3.final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.vert-x</groupId>
+            <artifactId>vertx-lang-groovy</artifactId>
+            <version>1.2.3.final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.vert-x</groupId>
+            <artifactId>vertx-lang-rhino</artifactId>
+            <version>1.2.3.final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>rhino</groupId>
+            <artifactId>js</artifactId>
+            <version>1.7R2</version>
+        </dependency>
+    </dependencies>
+
+</project>

@@ -1,11 +1,19 @@
+import sys
+from java.io import File
+import imp
+mod_path = File("mods/eban.alchemy-persistor-v0.1/").getAbsolutePath()
+md=imp.find_module("sqlalchemy",[File("mods/eban.alchemy-persistor-v0.1").getAbsolutePath()])
+imp.load_module("sqlalchemy",*md)
+
+
 from org.vertx.java.core.json import JsonObject, JsonArray
 import cgi
 import traceback
 from core.event_bus import EventBus
 from org.vertx.java.deploy.impl import VertxLocator
-import sys
-from java.io import File
-import imp
+
+
+
 
 import vertx
 from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta

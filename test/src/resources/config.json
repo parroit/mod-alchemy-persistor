@@ -1,0 +1,9 @@
+{
+    "address":"alchemy-persistor",
+    "protocol":"sqlite",
+    "host":"",
+    "db_name":"/test/db/testing.db",
+    "username":"",
+    "password":"",
+    "model-path":"test/src/jython"
+}

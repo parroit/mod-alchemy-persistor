@@ -1,4 +1,4 @@
-package mod
+package alchemy_persistor_test;
 
 import org.junit.Test;
 import org.vertx.java.framework.TestBase;
@@ -13,7 +13,7 @@ public class PersistorTest extends TestBase {
 
 
             System.setProperty("vertx.test.timeout", "3000");
-            startApp(mods.eban.alchemy.TestClient.class.getName(),true);
+            startApp(TestClient.class.getName(),true);
 
 
     }

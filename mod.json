@@ -1,6 +1,6 @@
 {
 
 
-    "worker":true
+    "main": "alchemy_persistor/AlchemyPersistor.py"
 
 }
