@@ -1,0 +1,409 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Mod Alchemy Persistor by parroit</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Mod Alchemy Persistor</h1>
+        <p>Sql Alchemy Persistor module for vert.x</p>
+
+        <p class="view"><a href="https://github.com/parroit/mod-alchemy-persistor">View the Project on GitHub <small>parroit/mod-alchemy-persistor</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/parroit/mod-alchemy-persistor/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/parroit/mod-alchemy-persistor/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/parroit/mod-alchemy-persistor">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Alchemy Persistor</h1>
+
+<p>This module allows data to be saved, retrieved, searched for, and deleted in a <a href="http://www.sqlalchemy.org/">Sql Alchemy</a> managed database.</p>
+
+<h2>Dependencies</h2>
+
+<p>This module requires a MongoDB server to be available on the network.</p>
+
+<h2>Name</h2>
+
+<p>The module name is <code>alchemy-persistor</code>.</p>
+
+<h2>Configuration</h2>
+
+<p>The alchemy-persistor module takes the following configuration:</p>
+
+<pre><code>{
+    "address":"&lt;address to listen to&gt;",
+    "protocol":"&lt;sql alchemy protocol&gt;",
+    "host":"&lt;database server hostname&gt;",
+    "db_name":"&lt;name of database&gt;",
+    "username":"&lt;username&gt;",
+    "password":"&lt;password&gt;",
+    "model-path":"&lt;path to the folder containing model definitions&gt;"
+}
+</code></pre>
+
+<p>For example:</p>
+
+<pre><code>{
+    "address":"mysql.persistor",
+    "protocol":"mysql",
+    "host":"myserver.com",
+    "db_name":"mydb",
+    "username":"myname",
+    "password":"mypassword",
+    "model-path":"models"
+}        
+</code></pre>
+
+<p>Let's take a look at each field in turn:</p>
+
+<ul>
+<li>
+<code>address</code> The main address for the module. Every module has a main address. Defaults to <code>alchemy-persistor</code>.</li>
+<li>
+<code>protocol</code> Name of the sql alchemy protocol to use to connect to database. Defaults to <code>sqlite</code>.</li>
+<li>
+<code>host</code> Host name or ip address of the MongoDB instance. Defaults to <code>localhost</code>.</li>
+<li>
+<code>db_name</code> Name of the database to use.</li>
+<li>
+<code>username</code> Username to use to connect to database.</li>
+<li>
+<code>password</code> Password to use to connect to database.</li>
+<li>
+<code>model-path</code> path to the folder containing model definitions. This folder should
+containing python files with definition of your sql alchemy model classes.</li>
+</ul><h2>Operations</h2>
+
+<p>The module supports the operations above. Please note that the operations protocol
+is identical to that used by <a href="https://github.com/vert-x/mod-mongo-persistor">mongo persistor module</a>.</p>
+
+<p>This allow you to configure the use of alchemy persistor in every place where
+you used Mongo persistor, without need to change your code.</p>
+
+<p>In every operation, the <code>collection</code> param must refer to the name of
+the Sql Alchemy class you want to work with.</p>
+
+<h3>Save</h3>
+
+<p>Saves a row in the database.</p>
+
+<p>To save a row send a JSON message to the module main address:</p>
+
+<pre><code>{
+    "action": "save",
+    "collection": &lt;collection&gt;,
+    "document": &lt;document&gt;
+}     
+</code></pre>
+
+<p>Where:</p>
+
+<ul>
+<li>
+<code>collection</code> is the name of the Sql Alchemy table that you wish to save the document in. This field is mandatory.</li>
+<li>
+<code>document</code> is the JSON document that you wish to save.</li>
+</ul><p>An example would be:</p>
+
+<pre><code>{
+    "action": "save",
+    "collection": "users",
+    "document": {
+        "name": "tim",
+        "age": 1000,
+        "shoesize": 3.14159,
+        "username": "tim",
+        "password": "wibble"
+    }
+}  
+</code></pre>
+
+<p>When the save complete successfully, a reply message is sent back to the sender with the following data:</p>
+
+<pre><code>{
+    "status": "ok",
+    "document": {
+        "name": "tim",
+        "age": 1000,
+        "shoesize": 3.14159,
+        "username": "tim",
+        "password": "wibble"
+    }
+}
+</code></pre>
+
+<p>The reply will also contain a field <code>document</code> with the row that was saved to database.
+This could be useful to retrieve the value of fields eventually setted by the Sql Alchemy class
+or by the database server.</p>
+
+<p>If the row already exists in the database it will be updated, otherwise it will be inserted.</p>
+
+<p>If an error occurs in saving the document a reply is returned:</p>
+
+<pre><code>{
+    "status": "error",
+    "message": &lt;message&gt;
+}
+</code></pre>
+
+<p>Where <code>message</code> is an error message.    </p>
+
+<h3>Find</h3>
+
+<p>Finds matching documents in the database.</p>
+
+<p>To find documents send a JSON message to the module main address:</p>
+
+<pre><code>{
+    "action": "find",
+    "collection": &lt;collection&gt;,
+    "matcher": &lt;matcher&gt;,
+    "limit": &lt;limit&gt;,
+    "batch_size": &lt;batch_size&gt;
+}     
+</code></pre>
+
+<p>Where:</p>
+
+<ul>
+<li>
+<code>collection</code> is the name of the Sql Alchemy table that you wish to search in in. This field is mandatory.</li>
+<li>
+<code>matcher</code> is a JSON object that you want to match against to find matching documents. This obeys the normal mongo persistor matching rues.
+Otherwise, it can be a string representing a query to issue on the db</li>
+<li>
+<code>limit</code> is a number which determines the maximum total number of rows to return. This is optional. By default all rows are returned.</li>
+</ul><p>An example would be:</p>
+
+<pre><code>{
+    "action": "find",
+    "collection": "orders",
+    "matcher": {
+        "item": "cheese"
+    }
+}  
+</code></pre>
+
+<p><em>This would return all orders where the <code>item</code> field has the value <code>cheese</code></em></p>
+
+<p>or using the query syntax for the matcher:</p>
+
+<pre><code>{
+    "action": "find",
+    "collection": "orders",
+    "matcher": "item == 'cheese' or total &gt; 100"
+    }
+}
+</code></pre>
+
+<p><em>This would return all orders where the <code>item</code> field has the value <code>cheese</code>, and the <code>qty</code> field is greater than 100</em></p>
+
+<p>When the find complete successfully, a reply message is sent back to the sender with the following data:</p>
+
+<pre><code>{
+    "status": "ok",
+    "results": &lt;results&gt;
+}   
+</code></pre>
+
+<p>Where <code>results</code> is a JSON array containing the results of the find operation. For example:</p>
+
+<pre><code>{
+    "status": "ok",
+    "results": [
+        {
+            "user": "tim",
+            "item": "cheese",
+            "total": 123.45
+        },
+        {
+            "user": "bob",
+            "item": "cheese",
+            "total": 12.23
+        },
+        {
+            "user": "jane",
+            "item": "cheese",
+            "total": 50.05
+        }
+    ]
+}
+</code></pre>
+
+<p>If an error occurs in finding the documents a reply is returned:</p>
+
+<pre><code>{
+    "status": "error",
+    "message": &lt;message&gt;
+}
+</code></pre>
+
+<p>Where <code>message</code> is an error message. </p>
+
+<h3>Find One</h3>
+
+<p>Finds a single matching document in the database.</p>
+
+<p>To find a document send a JSON message to the module main address:</p>
+
+<pre><code>{
+    "action": "findone",
+    "collection": &lt;collection&gt;,
+    "matcher": &lt;matcher&gt;
+}     
+</code></pre>
+
+<p>Where:</p>
+
+<ul>
+<li>
+<code>collection</code> is the name of the Sql Alchemy table that you wish to search in in. This field is mandatory.</li>
+<li>
+<code>matcher</code> is a JSON object that you want to match against to find matching documents. This obeys the normal mongo persistor matching rues.
+Otherwise, it can be a string representing a query to issue on the db</li>
+</ul><p>If more than one document matches, just the first one will be returned.</p>
+
+<p>An example would be:</p>
+
+<pre><code>{
+    "action": "findone",
+    "collection": "orders",
+    "matcher": {
+        "item": "cheese"
+    }
+}  
+</code></pre>
+
+<p><em>This would return the first order where the <code>item</code> field has the value <code>cheese</code></em></p>
+
+<p>or using the query syntax for the matcher:</p>
+
+<pre><code>{
+    "action": "findone",
+    "collection": "orders",
+    "matcher": "item == 'cheese' or total &gt; 100"
+    }
+}
+</code></pre>
+
+<p><em>This would return the first order where the <code>item</code> field has the value <code>cheese</code>, and the <code>qty</code> field is greater than 100</em></p>
+
+<p>When the find complete successfully, a reply message is sent back to the sender with the following data:</p>
+
+<pre><code>{
+    "status": "ok",
+    "result": &lt;result&gt;
+}       
+</code></pre>
+
+<p>If an error occurs in finding the documents a reply is returned:</p>
+
+<pre><code>{
+    "status": "error",
+    "message": &lt;message&gt;
+}
+</code></pre>
+
+<p>Where <code>message</code> is an error message. </p>
+
+<h3>Delete</h3>
+
+<p>Deletes matching documents in the database.</p>
+
+<p>To delete documents send a JSON message to the module main address:</p>
+
+<pre><code>{
+    "action": "delete",
+    "collection": &lt;collection&gt;,
+    "matcher": &lt;matcher&gt;
+}     
+</code></pre>
+
+<p>Where:</p>
+
+<ul>
+<li>
+<code>collection</code> is the name of the Sql Alchemy table that you wish to delete from. This field is mandatory.</li>
+<li>
+<code>matcher</code> is a JSON object that you want to match against to find matching documents. This obeys the normal mongo persistor matching rues.
+Otherwise, it can be a string representing a query to issue on the db</li>
+</ul><p>All documents that match will be deleted.</p>
+
+<p>An example would be:</p>
+
+<pre><code>{
+    "action": "delete",
+    "collection": "items",
+    "matcher": {
+        "item": "cheese"
+    }
+}  
+</code></pre>
+
+<p><em>This would delete all orders where the <code>item</code> field has the value <code>cheese</code></em></p>
+
+<p>or using the query syntax for the matcher:</p>
+
+<pre><code>{
+    "action": "delete",
+    "collection": "orders",
+    "matcher": "item == 'cheese' or total &gt; 100"
+    }
+}
+</code></pre>
+
+<p><em>This would delete all orders where the <code>item</code> field has the value <code>cheese</code>, and the <code>qty</code> field is greater than 100</em></p>
+
+<p>When the find complete successfully, a reply message is sent back to the sender with the following data:</p>
+
+<pre><code>{
+    "status": "ok",
+    "number": &lt;number&gt;
+}       
+</code></pre>
+
+<p>Where <code>number</code> is the number of documents deleted.    </p>
+
+<p>If an error occurs in finding the documents a reply is returned:</p>
+
+<pre><code>{
+    "status": "error",
+    "message": &lt;message&gt;
+}
+</code></pre>
+
+<p>Where <code>message</code> is an error message.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/parroit">parroit</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-34497228-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
