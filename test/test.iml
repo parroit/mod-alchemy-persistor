@@ -34,7 +34,7 @@
           <root url="jar://$MODULE_DIR$/../../vert.x-1.2.3.final/lib/jackson-mapper-asl-1.9.4.jar!/" />
           <root url="jar://$MODULE_DIR$/../../vert.x-1.2.3.final/lib/netty-3.5.0.Final.jar!/" />
           <root url="jar://$MODULE_DIR$/../../vert.x-1.2.3.final/lib/rhino-1.7R4.jar!/" />
-          <root url="jar://$MODULE_DIR$/../../vert.x-1.2.3.final/lib/sqlite-jdbc-3.7.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../dep/sqlite-jdbc-3.7.2.jar!/" />
           <root url="jar://$MODULE_DIR$/../../vert.x-1.2.3.final/lib/vertx-core-1.2.3.final.jar!/" />
           <root url="jar://$MODULE_DIR$/../../vert.x-1.2.3.final/lib/vertx-lang-groovy-1.2.3.final.jar!/" />
           <root url="jar://$MODULE_DIR$/../../vert.x-1.2.3.final/lib/vertx-lang-java-1.2.3.final.jar!/" />
@@ -53,7 +53,7 @@
           <root url="jar://$MODULE_DIR$/../../vert.x-1.2.3.final/lib/jackson-mapper-asl-1.9.4.jar!/" />
           <root url="jar://$MODULE_DIR$/../../vert.x-1.2.3.final/lib/netty-3.5.0.Final.jar!/" />
           <root url="jar://$MODULE_DIR$/../../vert.x-1.2.3.final/lib/rhino-1.7R4.jar!/" />
-          <root url="jar://$MODULE_DIR$/../../vert.x-1.2.3.final/lib/sqlite-jdbc-3.7.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../dep/sqlite-jdbc-3.7.2.jar!/" />
           <root url="jar://$MODULE_DIR$/../../vert.x-1.2.3.final/lib/vertx-core-1.2.3.final.jar!/" />
           <root url="jar://$MODULE_DIR$/../../vert.x-1.2.3.final/lib/vertx-lang-groovy-1.2.3.final.jar!/" />
           <root url="jar://$MODULE_DIR$/../../vert.x-1.2.3.final/lib/vertx-lang-java-1.2.3.final.jar!/" />
@@ -62,6 +62,7 @@
           <root url="jar://$MODULE_DIR$/../../vert.x-1.2.3.final/lib/vertx-lang-rhino-1.2.3.final.jar!/" />
           <root url="jar://$MODULE_DIR$/../../vert.x-1.2.3.final/lib/vertx-platform-1.2.3.final.jar!/" />
           <root url="jar://$MODULE_DIR$/../../vert.x-1.2.3.final/lib/vertx-testframework-1.2.3.final.jar!/" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-testframework/src/main/java" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -74,6 +75,18 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../mods/eban.alchemy-persistor-v0.1/lib/sqlite-jdbc-3.7.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../mods/eban.alchemy-persistor-v0.1/lib/sqlite-jdbc-3.7.2.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="org.testng:testng:6.0" level="project" />
   </component>
 </module>
 

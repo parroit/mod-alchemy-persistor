@@ -10,7 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <distributionManagement>
+  <!--  <distributionManagement>
         <repository>
 
             <id>local-deploy</id>
@@ -18,42 +18,44 @@
 
         </repository>
 
-    </distributionManagement>
+    </distributionManagement>-->
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <source>1.7</source>
-                        <target>1.7</target>
-                    </configuration>
-                </plugin>
 
-                <plugin>
-                    <groupId>org.vertx</groupId>
-                    <artifactId>vertx-maven-plugin</artifactId>
-                    <version>1.2.3.1-RELEASE</version>
-                    <configuration>
-                        <moduleName>eban.alchemy-persistor-v0.1</moduleName>
-                        <moduleRepoUrl>http://github.com/parroit/vertx-mods</moduleRepoUrl>
-                    </configuration>
-                </plugin>
+        <plugins>
 
-            </plugins>
 
-        </pluginManagement>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+
+            <!--   <plugin>
+                <groupId>org.vertx</groupId>
+                <artifactId>vertx-maven-plugin</artifactId>
+                <version>1.2.3.1-RELEASE</version>
+                <configuration>
+                    <moduleName>eban.alchemy-persistor-v0.1</moduleName>
+                    <moduleRepoUrl>http://github.com/parroit/vertx-mods</moduleRepoUrl>
+                </configuration>
+            </plugin>-->
+
+
+        </plugins>
+
 
 
         <testSourceDirectory>${project.basedir}/test/src</testSourceDirectory>
     </build>
 
-    <dependencies>
+   <dependencies>
 
         <dependency>
             <groupId>org.python</groupId>
-            <artifactId>jython</artifactId>
+            <artifactId>jython-standalone</artifactId>
             <version>2.5.3</version>
         </dependency>
 
@@ -69,11 +71,6 @@
             <version>1.2.3.final</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.vert-x</groupId>
-            <artifactId>vertx-lang-java</artifactId>
-            <version>1.2.3.final</version>
-        </dependency>
 
         <dependency>
             <groupId>org.vert-x</groupId>
@@ -104,6 +101,11 @@
             <artifactId>js</artifactId>
             <version>1.7R2</version>
         </dependency>
+       <dependency>
+           <groupId>org.xerial</groupId>
+           <artifactId>sqlite-jdbc</artifactId>
+           <version>3.7.2</version>
+       </dependency>
     </dependencies>
 
 </project>

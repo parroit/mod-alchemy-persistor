@@ -1,9 +1,6 @@
 import sys
 from java.io import File
 import imp
-mod_path = File("mods/eban.alchemy-persistor-v0.1/").getAbsolutePath()
-md=imp.find_module("sqlalchemy",[File("mods/eban.alchemy-persistor-v0.1").getAbsolutePath()])
-imp.load_module("sqlalchemy",*md)
 
 
 from org.vertx.java.core.json import JsonObject, JsonArray
@@ -251,7 +248,7 @@ class AlchemyPersistor:
 
                         if isinstance(class__, DeclarativeMeta):
                             json.putObject(column_name, self.to_json(getattr(obj, name)))
-                        elif column_type in ["<type bool>"]:
+                        elif column_type in ["<type 'bool'>"]:
                             json.putBoolean(column_name, getattr(obj, column_name))
                         elif column_type in ["<class 'sqlalchemy.orm.collections.InstrumentedList'>"]:
                             print("A LIST")
@@ -261,7 +258,7 @@ class AlchemyPersistor:
                                 array.addObject(self.to_json(instance))
                             json.putArray(column_name, array)
                             print("A LIST COMPLETE")
-                        elif column_type in ["<type number>"]:
+                        elif column_type in ["<type 'number'>"]:
                             json.putNumber(column_name, getattr(obj, column_name))
                         elif column_type in ["<type 'str'>", "<type 'unicode'>"]:
                             json.putString(column_name, getattr(obj, column_name))
@@ -291,6 +288,7 @@ class AlchemyPersistor:
 
 
     def _doDelete(self, message):
+        print("delete start")
         collection = self.getMandatoryString("collection", message)
         if collection is None:
             return
