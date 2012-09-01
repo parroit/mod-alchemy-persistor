@@ -2,7 +2,7 @@
 
 
 Alchemy Persistor is a module for the [Vert.x][2] web framework that allow you to persist your data
-module using Python [Sql Alchemy][1].
+model using Python [Sql Alchemy][1].
 
 For details and help on get started, see [web site][3]
 
