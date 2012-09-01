@@ -26,11 +26,12 @@ import org.vertx.java.framework.testng.TestClientBase;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.List;
 
 
-public class TestClient extends TestClientBase {
+public class PersistorTestClient extends TestClientBase {
 
     private EventBus eb;
     private static final Handler<Message<JsonObject>> EMPTY_HANDLER = new Handler<Message<JsonObject>>() {
@@ -58,15 +59,22 @@ public class TestClient extends TestClientBase {
         if (db.exists())
             db.delete();
         tu.azzert(!db.exists());
+//
+//        container.deployModule("eban.alchemy-persistor-v0.1", config, 1, new Handler<String>() {
+//            public void handle(String res) {
+//
+//
+//                tu.appReady();
+//            }
+//        });
 
-        container.deployModule("eban.alchemy-persistor-v0.1", config, 1, new Handler<String>() {
+        container.deployVerticle("alchemy_persistor/AlchemyPersistor.py", config, 1, new Handler<String>() {
             public void handle(String res) {
 
-
+                System.out.print(res);
                 tu.appReady();
             }
         });
-
 
     }
 
@@ -84,6 +92,62 @@ public class TestClient extends TestClientBase {
             .putBoolean("confirmed", true)
             .putBoolean("admin", true)
             .putString("email", "andrea.parodi@ebansoftware.net");
+
+
+    public void testMultipleTypes_insert() throws Exception {
+        final BigInteger oneFrillion = BigInteger.valueOf(1_000_000).multiply(BigInteger.valueOf(1_000_000));
+        final String japanese = "私は学生です";       //no, unfortunately, I'm not http://bit.ly/QN7Bix
+        final JsonObject testRow = new JsonObject()
+                .putString("aString", "really a complex row")
+                .putNumber("aInteger", 1234)
+                .putNumber("aSmallInteger", 34)
+                .putNumber("aBigInteger", oneFrillion)
+                .putNumber("aNumeric", 6666.66)
+                .putNumber("aFloat", 5555.55)
+                .putString("aDateTime", "2012-12-25 23:00:00")
+                .putString("aDate", "2012-12-25")
+                .putString("aTime", "23:00:00")
+                //.putString("aLargeBinary", "")
+                //.putString("aBinary", "")
+                .putBoolean("aBoolean", true)
+                .putString("aUnicode", japanese)
+                .putString("aUnicodeText", japanese)
+                //.putString("aInterval", "")
+                //.putString("aEnum", "")
+        ;
+
+        Handler<Message<JsonObject>> messageHandler = new Handler<Message<JsonObject>>() {
+            @Override
+            public void handle(Message<JsonObject> msg) {
+                tu.azzertResponseSuccess(msg);
+                JsonObject jsonObject = msg.body;
+                tu.azzert(jsonObject.getObject("document") != null);
+                jsonObject= jsonObject.getObject("document");
+                tu.azzertEquals(jsonObject.getString("aString"), "really a complex row");
+                tu.azzertEquals(jsonObject.getNumber("aInteger"),1234 );
+                tu.azzertEquals(jsonObject.getNumber("aSmallInteger"),34 );
+//                tu.azzertEquals(jsonObject.getNumber("aBigInteger"),oneFrillion);
+                tu.azzertEquals(jsonObject.getNumber("aNumeric"), 6666.66);
+                tu.azzertEquals(jsonObject.getNumber("aFloat"),5555.55 );
+                tu.azzertEquals(jsonObject.getString("aDateTime"), "2012-12-25 23:00:00" );
+                tu.azzertEquals(jsonObject.getString("aDate"),"2012-12-25" );
+                tu.azzertEquals(jsonObject.getString("aTime"),  "23:00:00");
+                tu.azzertEquals(jsonObject.getBoolean("aBoolean"),true );
+                tu.azzertEquals(jsonObject.getString("aUnicode"),japanese);
+                tu.azzertEquals(jsonObject.getString("aUnicodeText"),japanese );
+
+                tu.testComplete();
+
+            }
+        };
+        save(testRow, messageHandler,"MultipleTypes");
+
+
+    }
+
+
+
+
 
     public void testInsert() throws Exception {
 
@@ -161,8 +225,12 @@ public class TestClient extends TestClientBase {
 
     private void saveUser(JsonObject user, Handler<Message<JsonObject>> handler) {
         //save user
+        save(user, handler, "User");
+    }
+
+    private void save(JsonObject user, Handler<Message<JsonObject>> handler, String collection) {
         JsonObject json2 = new JsonObject()
-                .putString("collection", "User")
+                .putString("collection", collection)
                 .putString("action", "save")
                 .putObject("document", user);
         eb.send("alchemy-persistor", json2, handler);

@@ -1,22 +1,28 @@
 from sqlalchemy.orm import relation
 from sqlalchemy.schema import Column
-from sqlalchemy.types import  String, Boolean
-#
-#'String', 'Integer', 'SmallInteger', 'BigInteger', 'Numeric',
-#'Float', 'DateTime', 'Date', 'Time', 'LargeBinary', 'Binary',
-#'Boolean', 'Unicode', 'MutableType', 'Concatenable',
-#'UnicodeText','PickleType', 'Interval', 'Enum' ]
+from sqlalchemy.types import  *
+
+
 
 def init(Base):
     class MultipleTypes(Base):
         __tablename__ = 'types'
 
         aString = Column(String, primary_key=True)
-        fullname = Column(String)
-        password = Column(String)
-        email = Column(String)
-        confirmed = Column(Boolean)
-        admin = Column(Boolean)
 
+        aInteger          = Column(Integer     )
+        aSmallInteger     = Column(SmallInteger)
+        aBigInteger       = Column(BigInteger  )
+        aNumeric          = Column(Numeric  ,info={"precision":2}   )
+        aFloat            = Column(Float       )
+        aDateTime         = Column(DateTime    )
+        aDate             = Column(Date        )
+        aTime             = Column(Time        )
+        aLargeBinary      = Column(LargeBinary )
+        aBoolean          = Column(Boolean     )
+        aUnicode          = Column(Unicode     )
+        aUnicodeText      = Column(UnicodeText )
+        aInterval         = Column(Interval    )
+        #aEnum             = Column(Enum        )
 
     return MultipleTypes

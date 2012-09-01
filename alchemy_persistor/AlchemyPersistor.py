@@ -1,5 +1,8 @@
+from datetime import datetime
+from decimal import Decimal
 import sys
 from java.io import File
+from java.math import BigDecimal,MathContext
 import imp
 
 
@@ -70,9 +73,9 @@ class AlchemyPersistor:
     def send_status(self, status, message, json):
         if json is None:
             json = JsonObject()
-        if message.time_out:
-            vertx.cancel_timer(message.time_out)
-            message.time_out = None
+#        if message.time_out:
+#            vertx.cancel_timer(message.time_out)
+#            message.time_out = None
 
         json.putString("status", status)
         message.reply(json)
@@ -87,16 +90,16 @@ class AlchemyPersistor:
             action = msg.body["action"]
             session = self.create_new_session()
 
-            def timeout_handle(error):
-                VertxLocator.container.getLogger().warn("Closing DB cursor on timeout." + str(error))
-                try:
-                    session.close()
-                except ():
-                    pass
-                self.send_error(msg, "timeout error:" + str(error))
-
-            #msg.time_out = vertx.set_timer(10000,timeout_handle)
-            msg.time_out = None
+#            def timeout_handle(error):
+#                VertxLocator.container.getLogger().warn("Closing DB cursor on timeout." + str(error))
+#                try:
+#                    session.close()
+#                except ():
+#                    pass
+#                self.send_error(msg, "timeout error:" + str(error))
+#
+#            msg.time_out = vertx.set_timer(10000,timeout_handle)
+#            msg.time_out = None
 
             if action is None:
                 self.send_error(msg, "action must be specified")
@@ -138,26 +141,37 @@ class AlchemyPersistor:
 
         fields_vars = [vars(y.property.columns[0]) for x, y in fields if hasattr(y.property,"columns")]
 
-        doc2 = JsonObject()
+        #doc2 = JsonObject()
         primary_fields = [x['name'] + " == '" + doc[x['name']] + "'" for x in fields_vars if x['primary_key']]
 
         where = " and ".join(primary_fields)
         print(where)
         actual_doc = session.query(table).filter(where).first()
-        print("actual_doc: " + str(actual_doc))
-        print("new doc: " + str(doc))
+        print("actual_doc is : " + str(actual_doc))
+        print("new doc is : " + str(doc))
+
         if actual_doc is None:
             actual_doc = table()
             session.add(actual_doc)
 
         for name, value in doc.iteritems():
+            if str(table.__table__.columns[name].type)=="DATETIME":
+                value=datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+            elif str(table.__table__.columns[name].type)=="DATE":
+                value=datetime.strptime(value, "%Y-%m-%d")
+            elif str(table.__table__.columns[name].type)=="TIME":
+                value=datetime.strptime(value, "%H:%M:%S").time()
+            elif str(table.__table__.columns[name].type)=="NUMERIC":
+                value=str(value)
+                print("Numeric value is "+value)
+
             setattr(actual_doc, name, value)
 
         print("COMMIT: " + str(actual_doc))
         session.commit()
         saved_doc = session.query(table).filter(where).first()
-        self.collection = self.getMandatoryString("collection", message)
-        reply = JsonObject().putObject("document", self.to_json(saved_doc))
+
+        reply = JsonObject().putObject("document", self.to_json(saved_doc,collection))
         session.close()
         self.send_ok(message, reply)
 
@@ -213,11 +227,11 @@ class AlchemyPersistor:
         #Set a timeout, if the user doesn't reply within 10 secs, close the cursor
 
         first_result = None
-        self.collection = self.getMandatoryString("collection", message)
+        collection = self.getMandatoryString("collection", message)
 
         results = JsonArray()
         for obj in rows.all():
-            json = self.to_json(obj)
+            json = self.to_json(obj,collection)
             if first_result is None:
                 first_result = json
             results.addObject(json)
@@ -232,7 +246,7 @@ class AlchemyPersistor:
         self.send_ok(message, reply)
 
 
-    def to_json(self, obj):
+    def to_json(self, obj,collection):
         try:
             json = JsonObject()
             for name, type in vars(getattr(self, obj.__class__.__name__)).iteritems():
@@ -243,27 +257,61 @@ class AlchemyPersistor:
                         column_name = name
 
                         class__ = column_value.__class__
-                        column_type = str(class__)
-                        print(">>>>" + column_type)
+
+                        table = getattr(self, collection)
+
+                        column_type =str(table.__table__.columns[name].type)
+
+                        print ("and type is... "+column_type)
 
                         if isinstance(class__, DeclarativeMeta):
-                            json.putObject(column_name, self.to_json(getattr(obj, name)))
-                        elif column_type in ["<type 'bool'>"]:
+                            json.putObject(column_name, self.to_json(getattr(obj, name),column_type))
+
+                        elif column_type == "BOOLEAN":
                             json.putBoolean(column_name, getattr(obj, column_name))
+
                         elif column_type in ["<class 'sqlalchemy.orm.collections.InstrumentedList'>"]:
                             print("A LIST")
                             array = JsonArray()
                             for instance in column_value:
                                 print(str(instance))
-                                array.addObject(self.to_json(instance))
+                                array.addObject(self.to_json(instance,column_type))
                             json.putArray(column_name, array)
                             print("A LIST COMPLETE")
-                        elif column_type in ["<type 'number'>"]:
-                            json.putNumber(column_name, getattr(obj, column_name))
-                        elif column_type in ["<type 'str'>", "<type 'unicode'>"]:
-                            json.putString(column_name, getattr(obj, column_name))
+
+                        elif column_type == "DATETIME":
+                            attr = getattr(obj, column_name).strftime("%Y-%m-%d %H:%M:%S")
+                            json.putString(column_name,attr)
+
+                        elif column_type == "TIME":
+                            attr = getattr(obj, column_name).strftime("%H:%M:%S")
+                            json.putString(column_name,attr)
+
+                        elif column_type == "DATE":
+                            attr = getattr(obj, column_name).strftime("%Y-%m-%d")
+                            json.putString(column_name,attr)
+
+                        elif column_type in ["NUMERIC","FLOAT"]:
+                            attr = getattr(obj, column_name)
+
+                            column = table.__table__.columns[name]
+                            if not hasattr(column,"info"):
+                                precision = 2
+                            elif not column.info.has_key("precision"):
+                                precision = 2
+                            else:
+                                precision = column.info["precision"]
+
+                            attr=BigDecimal(str(attr)).setScale(precision, 5)  #BigDecimal.ROUND_HALF_DOWN=5
+                            json.putNumber(column_name, attr)
+
+                        elif column_type in ["SMALLINT","BIGINT","INTEGER","NUMERIC"]:
+                            attr = getattr(obj, column_name)
+                            json.putNumber(column_name, attr)
+
                         else:
-                            json.putString(column_name, str(getattr(obj, column_name)))
+                            json.putString(column_name, getattr(obj, column_name))
+
             print ("JSON:" + str(json))
             return json
         except Exception:
@@ -330,7 +378,7 @@ dbName = cfg.getString("db_name")
 username = cfg.getString("username")
 password = cfg.getString("password")
 
-db_path = protocol+"://"+host+dbName
+db_path = str(protocol) + "://"+str(host)+str(dbName)
 
 
 persistor=AlchemyPersistor(db_path,address,EventBus,Base)

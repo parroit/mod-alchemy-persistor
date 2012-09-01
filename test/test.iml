@@ -63,6 +63,37 @@
           <root url="jar://$MODULE_DIR$/../../vert.x-1.2.3.final/lib/vertx-platform-1.2.3.final.jar!/" />
           <root url="jar://$MODULE_DIR$/../../vert.x-1.2.3.final/lib/vertx-testframework-1.2.3.final.jar!/" />
           <root url="file://$MODULE_DIR$/../../vert.x/vertx-testframework/src/main/java" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-lang/vertx-lang-java/src/main/java" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-lang/vertx-lang-jruby/src/main/java" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-lang/vertx-lang-jython/src/main/java" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-lang/vertx-lang-rhino/src/main/java" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-core/src/main/java" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-examples/src/main/java/deploymod" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-examples/src/main/java/echo" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-examples/src/main/java/eventbusbridge" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-examples/src/main/java/fanout" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-examples/src/main/java/http" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-examples/src/main/java/httpperf" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-examples/src/main/java/https" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-examples/src/main/java/perf" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-examples/src/main/java/proxy" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-examples/src/main/java/pubsub" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-examples/src/main/java/resourceload" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-examples/src/main/java/route_match" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-examples/src/main/java/sendfile" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-examples/src/main/java/sockjs" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-examples/src/main/java/ssl" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-examples/src/main/java/upload" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-examples/src/main/java/websockets" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-examples/src/main/java/wsperf" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-lang/vertx-lang-java/src/main/java" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-lang/vertx-lang-jruby/src/main/java" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-lang/vertx-lang-jython/src/main/java" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-lang/vertx-lang-rhino/src/main/java" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-platform/src/main/java" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-testframework/src/main/java" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-testsuite/src/test/java" />
+          <root url="file://$MODULE_DIR$/../../vert.x/vertx-testsuite/src/test/mod-test/modtestjars" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -75,18 +106,36 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="org.testng:testng:6.0" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../mods/eban.alchemy-persistor-v0.1/lib/sqlite-jdbc-3.7.2.jar!/" />
+          <root url="file://$MODULE_DIR$/.." />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib/sqlalchemy.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib/sqlite-jdbc-3.7.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/../mods/eban.alchemy-persistor-v0.1/lib/sqlite-jdbc-3.7.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib/sqlite-jdbc-3.7.2.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="library" name="org.testng:testng:6.0" level="project" />
   </component>
 </module>
 

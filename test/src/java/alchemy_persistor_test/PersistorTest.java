@@ -27,7 +27,7 @@ public class PersistorTest extends TestBase {
     protected void onStart() throws Exception {
 
         System.setProperty("vertx.test.timeout", "3000");
-        startApp(TestClient.class.getName(), true);
+        startApp(PersistorTestClient.class.getName(), true);
 
 
     }
@@ -45,6 +45,13 @@ public class PersistorTest extends TestBase {
 
         startTest(getMethodName(), true);
     }
+
+    @Test(dependsOnMethods = "testDbCreation")
+    public void testMultipleTypes_insert() throws Exception {
+
+        startTest(getMethodName(), true);
+    }
+
 
     @Test(dependsOnMethods = "testInsert")
     public void testFind() throws Exception {

@@ -53,7 +53,7 @@ public class TestUtils {
   }
 
   public void azzert(boolean result) {
-    azzert(result, null);
+    azzert(result, "Assertion failed.");
   }
 
   public void azzert(boolean result, String message) {
