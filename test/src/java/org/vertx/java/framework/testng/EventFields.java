@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Andrea Parodi.
+ * Copyright 2012 Andrea Parodi.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
