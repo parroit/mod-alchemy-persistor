@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="license" content="http://creativecommons.org/licenses/by-sa/3.0/deed.it">
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Mod Alchemy Persistor</title>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+    <script src="/js/modernizr.custom.js"></script>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/docs.css" rel="stylesheet">
+
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+
+</head>
+<body data-spy="scroll" data-target=".bs-docs-sidebar">
+<a href="https://github.com/parroit/mod-alchemy-persistor">
+    <img style="position: absolute; top: 40px; left: 0; border: 0;"
+         src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png" alt="Fork me on GitHub">
+</a>
+
+
+<div class="container">
+    <div id="header" class="row">
+        <div class="span12">
+            <div class="navbar navbar-fixed-top">
+                <div class="navbar-inner">
+                    <div class="container">
+
+
+                        <span class="name brand">Mod Alchemy Persistor</span>
+
+                        <ul class="nav">
+
+
+                            <li
+                             >
+                            <a href="/">Home</a>
+                            </li>
+                            <li
+                            class="active" >
+                            <a href="/documentation.html">Documentation</a>
+                            </li>
+                            <li
+                            >
+                            <a href="/get-started.html">Get started</a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/parroit/mod-alchemy-persistor">Source</a>
+                            </li>
+                            <li
+                            >
+                            <a href="/get-help.html">Help</a>
+                            </li>
+                            <li
+                            >
+                            <a href="/status.html">Status</a>
+                            </li>
+
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div id="content" class="row" style="margin-top: 50px;">
+
+            <div class="span1"> &nbsp;</div>
+            <div class="span10">
+
+                <!---Licensed by Andrea Parodi under http://creativecommons.org/licenses/by-sa/3.0/deed.it-->
+
+
+<div class="bs-docs-sidebar navbar-fixed-top" style="margin-top: 250px; margin-left: 20px;">
+    <ul class="nav nav-list bs-docs-sidenav">
+        <li class="nav-header">Documentation</li>
+        <li><a tabindex="-1" href="#Dependencies">Dependencies</a></li>
+        <li><a tabindex="-1" href="#Deploy">Deploy</a></li>
+        <li><a tabindex="-1" href="#Configuration">Configuration</a></li>
+
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#Operations">Commands</a>
+            <ul class="dropdown-menu nav">
+                <li><a tabindex="-1" href="#save">Save</a></li>
+                <li><a tabindex="-1" href="#find">Find</a></li>
+                <li><a tabindex="-1" href="#findone">Find One</a></li>
+                <li><a tabindex="-1" href="#delete">Delete</a></li>
+
+            </ul>
+        </li>
+    </ul>
+
+</div>
+<div class="row">
+    <div class="span2">&nbsp;</div>
+    <div class="span8">
+        
+        <h1 id='documentation'>Documentation</h1>
+<a id='Dependencies'>&nbsp;</a><p>.</p>
+<h2 id='dependencies'>Dependencies</h2>
+
+<p>This module has no external dependencies, other than a running database of your choise, among these supported (by now, only sqlite has been tested)</p>
+<a id='Deploy'>&nbsp;</a><p>.</p>
+<h2 id='deploy'>Deploy</h2>
+
+<p>The module name is eban-alchemy-persistor-<em>version</em> You have to replace version with the current version of the module, which as the time of writing is <code>v0.1</code></p>
+<a id='Configuration'>&nbsp;</a><p>.</p>
+<h2 id='configuration'>Configuration</h2>
+
+<p>The alchemy-persistor module takes the following configuration:</p>
+
+<pre><code>{
+    &quot;address&quot;:&quot;&lt;address to listen to&gt;&quot;,
+    &quot;protocol&quot;:&quot;&lt;sql alchemy protocol&gt;&quot;,
+    &quot;host&quot;:&quot;&lt;database server hostname&gt;&quot;,
+    &quot;db_name&quot;:&quot;&lt;name of database&gt;&quot;,
+    &quot;username&quot;:&quot;&lt;username&gt;&quot;,
+    &quot;password&quot;:&quot;&lt;password&gt;&quot;,
+    &quot;model-path&quot;:&quot;&lt;path to the folder containing model definitions&gt;&quot;
+}</code></pre>
+
+<p>For example:</p>
+
+<pre><code>{
+    &quot;address&quot;:&quot;mysql.persistor&quot;,
+    &quot;protocol&quot;:&quot;mysql&quot;,
+    &quot;host&quot;:&quot;myserver.com&quot;,
+    &quot;db_name&quot;:&quot;mydb&quot;,
+    &quot;username&quot;:&quot;myname&quot;,
+    &quot;password&quot;:&quot;mypassword&quot;,
+    &quot;model-path&quot;:&quot;models&quot;
+}</code></pre>
+
+<p>Let&#8217;s take a look at each field in turn:</p>
+
+<ul>
+<li><code>address</code> The main address for the module. Every module has a main address. Defaults to <code>alchemy-persistor</code>.</li>
+
+<li><code>protocol</code> Name of the sql alchemy protocol to use to connect to database. Defaults to <code>sqlite</code>.</li>
+
+<li><code>host</code> Host name or ip address of the MongoDB instance. Defaults to <code>localhost</code>.</li>
+
+<li><code>db_name</code> Name of the database to use.</li>
+
+<li><code>username</code> Username to use to connect to database.</li>
+
+<li><code>password</code> Password to use to connect to database.</li>
+
+<li><code>model-path</code> path to the folder containing model definitions. This folder should containing python files with definition of your sql alchemy model classes. <a id='Operations'>&nbsp;</a> <p>.</p> <p>.</p></li>
+</ul>
+
+<h2 id='operations_and_commands'>Operations and commands</h2>
+
+<p>The module supports the operations above. Please note that the operations protocol is identical to that used by <a href='https://github.com/vert-x/mod-mongo-persistor'>mongo persistor module</a>.</p>
+
+<p>This allow you to configure the use of alchemy persistor in every place where you used Mongo persistor, without need to change your code.</p>
+
+<p>In every operation, the <code>collection</code> param must refer to the name of the Sql Alchemy class you want to work with.</p>
+<a id='Save'>&nbsp;</a><p>.</p>
+<h3 id='save'>Save</h3>
+
+<p>Saves a row in the database.</p>
+
+<p>To save a row send a JSON message to the module main address:</p>
+
+<pre><code>{
+    &quot;action&quot;: &quot;save&quot;,
+    &quot;collection&quot;: &lt;collection&gt;,
+    &quot;document&quot;: &lt;document&gt;
+}</code></pre>
+
+<p>Where:</p>
+
+<ul>
+<li><code>collection</code> is the name of the Sql Alchemy table that you wish to save the document in. This field is mandatory.</li>
+
+<li><code>document</code> is the JSON document that you wish to save.</li>
+</ul>
+
+<p>An example would be:</p>
+
+<pre><code>{
+    &quot;action&quot;: &quot;save&quot;,
+    &quot;collection&quot;: &quot;users&quot;,
+    &quot;document&quot;: {
+        &quot;name&quot;: &quot;tim&quot;,
+        &quot;age&quot;: 1000,
+        &quot;shoesize&quot;: 3.14159,
+        &quot;username&quot;: &quot;tim&quot;,
+        &quot;password&quot;: &quot;wibble&quot;
+    }
+}</code></pre>
+
+<p>When the save complete successfully, a reply message is sent back to the sender with the following data:</p>
+
+<pre><code>{
+    &quot;status&quot;: &quot;ok&quot;,
+    &quot;document&quot;: {
+        &quot;name&quot;: &quot;tim&quot;,
+        &quot;age&quot;: 1000,
+        &quot;shoesize&quot;: 3.14159,
+        &quot;username&quot;: &quot;tim&quot;,
+        &quot;password&quot;: &quot;wibble&quot;
+    }
+}</code></pre>
+
+<p>The reply will also contain a field <code>document</code> with the row that was saved to database. This could be useful to retrieve the value of fields eventually setted by the Sql Alchemy class or by the database server.</p>
+
+<p>If the row already exists in the database it will be updated, otherwise it will be inserted.</p>
+
+<p>If an error occurs in saving the document a reply is returned:</p>
+
+<pre><code>{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &lt;message&gt;
+}</code></pre>
+
+<p>Where <code>message</code> is an error message.</p>
+<a id='find'>&nbsp;</a><p>.</p>
+<h3 id='find'>Find</h3>
+
+<p>Finds matching documents in the database.</p>
+
+<p>To find documents send a JSON message to the module main address:</p>
+
+<pre><code>{
+    &quot;action&quot;: &quot;find&quot;,
+    &quot;collection&quot;: &lt;collection&gt;,
+    &quot;matcher&quot;: &lt;matcher&gt;,
+    &quot;limit&quot;: &lt;limit&gt;,
+    &quot;batch_size&quot;: &lt;batch_size&gt;
+}</code></pre>
+
+<p>Where:</p>
+
+<ul>
+<li><code>collection</code> is the name of the Sql Alchemy table that you wish to search in in. This field is mandatory.</li>
+
+<li><code>matcher</code> is a JSON object that you want to match against to find matching documents. This obeys the normal mongo persistor matching rues. Otherwise, it can be a string representing a query to issue on the db</li>
+
+<li><code>limit</code> is a number which determines the maximum total number of rows to return. This is optional. By default all rows are returned.</li>
+</ul>
+
+<p>An example would be:</p>
+
+<pre><code>{
+    &quot;action&quot;: &quot;find&quot;,
+    &quot;collection&quot;: &quot;orders&quot;,
+    &quot;matcher&quot;: {
+        &quot;item&quot;: &quot;cheese&quot;
+    }
+}</code></pre>
+
+<p><em>This would return all orders where the <code>item</code> field has the value <code>cheese</code></em></p>
+
+<p>or using the query syntax for the matcher:</p>
+
+<pre><code>{
+    &quot;action&quot;: &quot;find&quot;,
+    &quot;collection&quot;: &quot;orders&quot;,
+    &quot;matcher&quot;: &quot;item == &#39;cheese&#39; or total &gt; 100&quot;
+    }
+}</code></pre>
+
+<p><em>This would return all orders where the <code>item</code> field has the value <code>cheese</code>, and the <code>qty</code> field is greater than 100</em></p>
+
+<p>When the find complete successfully, a reply message is sent back to the sender with the following data:</p>
+
+<pre><code>{
+    &quot;status&quot;: &quot;ok&quot;,
+    &quot;results&quot;: &lt;results&gt;
+}</code></pre>
+
+<p>Where <code>results</code> is a JSON array containing the results of the find operation. For example:</p>
+
+<pre><code>{
+    &quot;status&quot;: &quot;ok&quot;,
+    &quot;results&quot;: [
+        {
+            &quot;user&quot;: &quot;tim&quot;,
+            &quot;item&quot;: &quot;cheese&quot;,
+            &quot;total&quot;: 123.45
+        },
+        {
+            &quot;user&quot;: &quot;bob&quot;,
+            &quot;item&quot;: &quot;cheese&quot;,
+            &quot;total&quot;: 12.23
+        },
+        {
+            &quot;user&quot;: &quot;jane&quot;,
+            &quot;item&quot;: &quot;cheese&quot;,
+            &quot;total&quot;: 50.05
+        }
+    ]
+}</code></pre>
+
+<p>If an error occurs in finding the documents a reply is returned:</p>
+
+<pre><code>{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &lt;message&gt;
+}</code></pre>
+
+<p>Where <code>message</code> is an error message.</p>
+<a id='findone'>&nbsp;</a><p>.</p>
+<h3 id='find_one'>Find One</h3>
+
+<p>Finds a single matching document in the database.</p>
+
+<p>To find a document send a JSON message to the module main address:</p>
+
+<pre><code>{
+    &quot;action&quot;: &quot;findone&quot;,
+    &quot;collection&quot;: &lt;collection&gt;,
+    &quot;matcher&quot;: &lt;matcher&gt;
+}</code></pre>
+
+<p>Where:</p>
+
+<ul>
+<li><code>collection</code> is the name of the Sql Alchemy table that you wish to search in in. This field is mandatory.</li>
+
+<li><code>matcher</code> is a JSON object that you want to match against to find matching documents. This obeys the normal mongo persistor matching rues. Otherwise, it can be a string representing a query to issue on the db</li>
+</ul>
+
+<p>If more than one document matches, just the first one will be returned.</p>
+
+<p>An example would be:</p>
+
+<pre><code>{
+    &quot;action&quot;: &quot;findone&quot;,
+    &quot;collection&quot;: &quot;orders&quot;,
+    &quot;matcher&quot;: {
+        &quot;item&quot;: &quot;cheese&quot;
+    }
+}</code></pre>
+
+<p><em>This would return the first order where the <code>item</code> field has the value <code>cheese</code></em></p>
+
+<p>or using the query syntax for the matcher:</p>
+
+<pre><code>{
+    &quot;action&quot;: &quot;findone&quot;,
+    &quot;collection&quot;: &quot;orders&quot;,
+    &quot;matcher&quot;: &quot;item == &#39;cheese&#39; or total &gt; 100&quot;
+    }
+}</code></pre>
+
+<p><em>This would return the first order where the <code>item</code> field has the value <code>cheese</code>, and the <code>qty</code> field is greater than 100</em></p>
+
+<p>When the find complete successfully, a reply message is sent back to the sender with the following data:</p>
+
+<pre><code>{
+    &quot;status&quot;: &quot;ok&quot;,
+    &quot;result&quot;: &lt;result&gt;
+}</code></pre>
+
+<p>If an error occurs in finding the documents a reply is returned:</p>
+
+<pre><code>{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &lt;message&gt;
+}</code></pre>
+
+<p>Where <code>message</code> is an error message.</p>
+<a id='delete'>&nbsp;</a><p>.</p>
+<h3 id='delete'>Delete</h3>
+
+<p>Deletes matching documents in the database.</p>
+
+<p>To delete documents send a JSON message to the module main address:</p>
+
+<pre><code>{
+    &quot;action&quot;: &quot;delete&quot;,
+    &quot;collection&quot;: &lt;collection&gt;,
+    &quot;matcher&quot;: &lt;matcher&gt;
+}</code></pre>
+
+<p>Where:</p>
+
+<ul>
+<li><code>collection</code> is the name of the Sql Alchemy table that you wish to delete from. This field is mandatory.</li>
+
+<li><code>matcher</code> is a JSON object that you want to match against to find matching documents. This obeys the normal mongo persistor matching rues. Otherwise, it can be a string representing a query to issue on the db</li>
+</ul>
+
+<p>All documents that match will be deleted.</p>
+
+<p>An example would be:</p>
+
+<pre><code>{
+    &quot;action&quot;: &quot;delete&quot;,
+    &quot;collection&quot;: &quot;items&quot;,
+    &quot;matcher&quot;: {
+        &quot;item&quot;: &quot;cheese&quot;
+    }
+}</code></pre>
+
+<p><em>This would delete all orders where the <code>item</code> field has the value <code>cheese</code></em></p>
+
+<p>or using the query syntax for the matcher:</p>
+
+<pre><code>{
+    &quot;action&quot;: &quot;delete&quot;,
+    &quot;collection&quot;: &quot;orders&quot;,
+    &quot;matcher&quot;: &quot;item == &#39;cheese&#39; or total &gt; 100&quot;
+    }
+}</code></pre>
+
+<p><em>This would delete all orders where the <code>item</code> field has the value <code>cheese</code>, and the <code>qty</code> field is greater than 100</em></p>
+
+<p>When the find complete successfully, a reply message is sent back to the sender with the following data:</p>
+
+<pre><code>{
+    &quot;status&quot;: &quot;ok&quot;,
+    &quot;number&quot;: &lt;number&gt;
+}</code></pre>
+
+<p>Where <code>number</code> is the number of documents deleted.</p>
+
+<p>If an error occurs in finding the documents a reply is returned:</p>
+
+<pre><code>{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &lt;message&gt;
+}</code></pre>
+
+<p>Where <code>message</code> is an error message.</p>
+        <p>&nbsp;</p>
+    </div>
+</div>
+            </div>
+            <div class="span1"> &nbsp;</div>
+
+        </div>
+    </div>
+
+    <div id="footer">
+
+        <div class="navbar navbar-fixed-bottom">
+            <div class="navbar-inner">
+                <div class="container">
+                    Developed by <a href="http://feeljava.ebansoftware.net">Andrea Parodi</a>
+                    &nbsp;|&nbsp;
+                    Released under the <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache 2 License</a>
+                    &nbsp;|&nbsp;
+                    Website content covered by <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.it">Creative
+                    Commons 3.0 </a>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-----------------------------------------------------------------------------
+GOOGLE ANALYTICS
+--------------------------------------------------------------------------->
+
+<script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+    try {
+        var pageTracker = _gat._getTracker("UA-34497228-1");
+        pageTracker._trackPageview();
+    } catch (err) {
+    }
+</script>
+</body>
+</html>

@@ -46,7 +46,7 @@
 
 
                             <li
-                            class="active" >
+                             >
                             <a href="/">Home</a>
                             </li>
                             <li
@@ -54,7 +54,7 @@
                             <a href="/documentation.html">Documentation</a>
                             </li>
                             <li
-                            >
+                            class="active">
                             <a href="/get-started.html">Get started</a>
                             </li>
                             <li>
@@ -83,17 +83,29 @@
             <div class="span10">
 
                 <!---Licensed by Andrea Parodi under http://creativecommons.org/licenses/by-sa/3.0/deed.it-->
-<h1 id='welcome_to_alchemy_persistor_web_site'>Welcome to Alchemy Persistor web site</h1>
+<h1 id='getting_started'>Getting started</h1>
 
-<h2 id='abstract'>Abstract</h2>
+<h3 id='1_install_the_module'>1) Install the module</h3>
 
-<p>Alchemy Persistor is a module for the <a href='http://vertx.io'>Vert.x</a> web framework that allow you to persist your data models using Python <a href='http://www.sqlalchemy.org/'>Sql Alchemy</a>.</p>
+<p>Thanks to the modules engine of Vert.x, there is no need to install anything to use this module, just <a href='http://vertx.io/core_manual_python.html#deploying-a-module-programmatically'>deploy a module</a> giving it a name of &#8220;eban.alchemy-persistor-v0.1&#8221; and a JSON configuration as explained in <a href='/documentation.html'>documentation</a>.</p>
 
-<p>This module allows data to be saved, retrieved, searched for, and deleted in a <a href='http://www.sqlalchemy.org/'>Sql Alchemy</a> managed database.</p>
+<p>However, since the module has not yet been submitted to the official vert.x repository, you have to specify to use my repo fork when running your vertx verticles.</p>
 
-<p>It is inspired from <a href='https://github.com/vert-x/mod-mongo-persistor'>mongo persistor</a>, which I use as a starting skeleton for the project, and from which I take the format for all json command.</p>
+<p>You can do this adding the option <code>-repo http://github.com/parroit</code> when you run vertx.</p>
 
-<p>To get started, see <a href='/get-started.html'>Getting started</a></p>
+<h3 id='2_read_the_documentation'>2) Read the documentation</h3>
+
+<p>You can read the <a href='/documentation.html'>documentation of the module</a>. Syntax of JSON configuration and commands is explained there.</p>
+
+<h3 id='3_start_play_with_it'>3) Start play with it</h3>
+
+<p>To start playing with the module, you can look at the <a href='https://github.com/parroit/mod-alchemy-persistor/tree/master/examples'>examples source code</a> or at <a href='https://github.com/parroit/mod-alchemy-persistor/tree/master/test/src'>the tests</a> to understand the usage.</p>
+
+<p>If you write some small example, and want to contribute, please send me them and I&#8217;ll include them in the package.</p>
+
+<h3 id='4_contribute'>4) Contribute!</h3>
+
+<p>If you want to help the project go on, <a href='/get-help.html'>see what you can do</a></p>
             </div>
             <div class="span1"> &nbsp;</div>
 
